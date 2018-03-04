@@ -8,23 +8,24 @@
 #include <vector>
 
 class Selection {
-    std::vector<int> numbers;
-    std::vector<double> chances;
-    std::vector<double> chancesSum;
-    int numTries = 10000;
-    int numCount = 10;
-    int sum = 0;
-public:
-    Selection();
+ public:
+  Selection();
 
-    virtual ~Selection();
+  virtual ~Selection();
 
-    void fillVectors();
+  void FillVectors();
 
-    void selectionWithReturn();
+  void SelectionWithReturn();
 
-    void selectionWOReturn();
+  void SelectionWoReturn();
 
+ private:
+  std::vector<int> numbers_;
+  std::vector<double> chances_;
+  std::vector<double> chances_sum_;
+  int num_tries_ = 10000;
+  int num_count_ = 10;
+  int sum_ = 0;
 };
 
 #endif //MODELING_DISTRIBUTION_H

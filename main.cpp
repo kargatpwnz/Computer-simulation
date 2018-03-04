@@ -1,20 +1,18 @@
 #include <iostream>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
 #include "src/headers/Tree.h"
 #include "src/headers/Graph.h"
+#include "src/headers/Chain.h"
 
-int main()
-{
-    try {
-        Graph graph(5, 7, 3);
-        graph.generateGraph();
-        graph.printTree();
-    } catch (int err) {
-        std::cout << err << std::endl;
-    }
+using namespace boost::numeric::ublas;
 
-//    Tree tree(10, 3);
-//    tree.printTree();
+int main() {
+  Chain chain;
+  chain.MultiplyMatrices();
+  chain.GenerateTransitions();
+  chain.PrintTransitionMatrices();
 
-    return 0;
+  return 0;
 }

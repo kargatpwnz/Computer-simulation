@@ -9,24 +9,25 @@
 #include <map>
 
 class Tree {
-protected:
-    std::vector<int> vertexes;
 
-    std::map<int, int> vertexPowPair;
-    std::map<int, std::vector<int>> tree;
+ public:
+  Tree(int vertexCount, int degree);
 
-    int root;
-    int maxDegree;
-public:
-    Tree(int vertexCount, int degree);
+  virtual ~Tree();
 
-    virtual ~Tree();
+  void setRoot();
 
-    void setRoot();
+  void printTree();
 
-    void printTree();
+  void generateTree();
+ protected:
+  std::vector<int> vertexes_;
 
-    void generateTree();
+  std::map<int, int> vertex_pow_pair_;
+  std::map<int, std::vector<int>> tree_;
+
+  int root_;
+  int max_degree_;
 };
 
 #endif //MODELING_TREE_H

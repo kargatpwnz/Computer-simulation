@@ -7,76 +7,72 @@
 #include <random>
 #include <iostream>
 
-Tree::Tree(int vertexCount, int degree)
-{
-    maxDegree = degree;
-    for (int i = 0; i < vertexCount; ++i) {
-        vertexes.push_back(i + 1);
-    }
-    generateTree();
+Tree::Tree(int vertexCount, int degree) {
+  max_degree_ = degree;
+  for (int i = 0; i < vertexCount; ++i) {
+    vertexes_.push_back(i + 1);
+  }
+  generateTree();
 }
 
 Tree::~Tree()
 = default;
 
-void Tree::setRoot()
-{
+void Tree::setRoot() {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::shuffle(vertexes_.begin(), vertexes_.end(), gen);
+
+  root_ = vertexes_.back();
+  vertex_pow_pair_[root_] = 0;
+  vertexes_.pop_back();
+  std::cout << "Root " << root_ << std::endl;
+}
+
+void Tree::printTree() {
+  for (auto x : tree_) {
+    std::cout << x.first << " ";
+    for (auto y : x.second) {
+      std::cout << y << " ";
+    }
+    std::cout << std::endl;
+  }
+}
+
+void Tree::generateTree() {
+  setRoot();
+
+  while (!vertexes_.empty()) {
+    int vertex = vertexes_.back();
+    vertexes_.pop_back();
+
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::shuffle(vertexes.begin(), vertexes.end(), gen);
+    std::uniform_int_distribution<> dist(0, vertex_pow_pair_.size());
 
-    root = vertexes.back();
-    vertexPowPair[root] = 0;
-    vertexes.pop_back();
-    std::cout << "Root " << root << std::endl;
-}
+    auto mapIt = vertex_pow_pair_.begin();
+    do {
+      mapIt = vertex_pow_pair_.begin();
+      std::advance(mapIt, dist(gen));
+    } while (mapIt == vertex_pow_pair_.end());
 
-void Tree::printTree()
-{
-    for (auto x : tree) {
-        std::cout << x.first << " ";
-        for (auto y : x.second) {
-            std::cout << y <<  " ";
-        }
-        std::cout << std::endl;
-    }
-}
+    int vertexInTree = mapIt->first;
 
-void Tree::generateTree()
-{
-    setRoot();
+    vertex_pow_pair_.insert(std::make_pair(vertex, 0));
+    vertex_pow_pair_[vertex]++;
+    vertex_pow_pair_[vertexInTree]++;
 
-    while (!vertexes.empty()) {
-        int vertex = vertexes.back();
-        vertexes.pop_back();
+    if (vertex_pow_pair_[vertex] == max_degree_)
+      vertex_pow_pair_.erase(vertex);
+    if (vertex_pow_pair_[vertexInTree] == max_degree_)
+      vertex_pow_pair_.erase(vertexInTree);
 
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dist(0, vertexPowPair.size());
+    if (vertex > vertexInTree)
+      std::swap(vertex, vertexInTree);
 
-        auto mapIt = vertexPowPair.begin();
-        do {
-            mapIt = vertexPowPair.begin();
-            std::advance(mapIt, dist(gen));
-        } while (mapIt == vertexPowPair.end());
+    if (tree_[vertex].empty())
+      tree_[vertex] = std::vector<int>({});
 
-        int vertexInTree = mapIt->first;
-
-        vertexPowPair.insert(std::make_pair(vertex, 0));
-        vertexPowPair[vertex]++;
-        vertexPowPair[vertexInTree]++;
-
-        if (vertexPowPair[vertex] == maxDegree)
-            vertexPowPair.erase(vertex);
-        if (vertexPowPair[vertexInTree] == maxDegree)
-            vertexPowPair.erase(vertexInTree);
-
-        if (vertex > vertexInTree)
-            std::swap(vertex, vertexInTree);
-
-        if (tree[vertex].empty())
-            tree[vertex] = std::vector<int>({});
-
-        tree[vertex].push_back(vertexInTree);
-    }
+    tree_[vertex].push_back(vertexInTree);
+  }
 }

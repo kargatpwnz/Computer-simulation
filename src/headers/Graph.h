@@ -8,17 +8,17 @@
 #include "Tree.h"
 
 class Graph : public Tree {
-    int vertexCount;
-    int edgesCount;
-public:
-    Graph(int vertexCount, int degree, int edges);
+ public:
+  Graph(int vertex_count, int degree, int edges);
 
-    virtual ~Graph();
+  virtual ~Graph();
 
-    void generateGraph();
+  void generateGraph();
 
-    std::vector<int> getTwoRandVertex();
-
+  std::vector<int> GetTwoRandVertex();
+ private:
+  int vertex_count_;
+  int edges_count_;
 };
 
 #endif //MODELING_GRAPH_H
