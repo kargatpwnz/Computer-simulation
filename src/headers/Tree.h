@@ -15,11 +15,11 @@ class Tree {
 
   virtual ~Tree();
 
-  void setRoot();
+  void SetRoot();
 
-  void printTree();
+  void PrintTree();
 
-  void generateTree();
+  void GenerateTree();
  protected:
   std::vector<int> vertexes_;
 

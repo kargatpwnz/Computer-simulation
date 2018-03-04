@@ -14,7 +14,7 @@ Graph::Graph(int vertex_count, int edges, int degree) : Tree(vertex_count, degre
     throw -2;
   if (degree == 1 || degree == 0)
     throw -3;
-  if (degree < 2 * edges / vertex_count)
+  if (degree <= 2 * edges / vertex_count)
     throw -3;
 
   vertex_count_ = vertex_count;
@@ -25,7 +25,7 @@ Graph::Graph(int vertex_count, int edges, int degree) : Tree(vertex_count, degre
 Graph::~Graph()
 = default;
 
-void Graph::generateGraph() {
+void Graph::GenerateGraph() {
   for (int i = 0; i < (edges_count_ - (vertex_count_ - 1)); ++i) {
     auto twoVertex = GetTwoRandVertex();
 

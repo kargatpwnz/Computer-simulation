@@ -12,13 +12,13 @@ Tree::Tree(int vertexCount, int degree) {
   for (int i = 0; i < vertexCount; ++i) {
     vertexes_.push_back(i + 1);
   }
-  generateTree();
+  GenerateTree();
 }
 
 Tree::~Tree()
 = default;
 
-void Tree::setRoot() {
+void Tree::SetRoot() {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::shuffle(vertexes_.begin(), vertexes_.end(), gen);
@@ -29,7 +29,7 @@ void Tree::setRoot() {
   std::cout << "Root " << root_ << std::endl;
 }
 
-void Tree::printTree() {
+void Tree::PrintTree() {
   for (auto x : tree_) {
     std::cout << x.first << " ";
     for (auto y : x.second) {
@@ -39,8 +39,8 @@ void Tree::printTree() {
   }
 }
 
-void Tree::generateTree() {
-  setRoot();
+void Tree::GenerateTree() {
+  SetRoot();
 
   while (!vertexes_.empty()) {
     int vertex = vertexes_.back();

@@ -13,7 +13,7 @@ class Graph : public Tree {
 
   virtual ~Graph();
 
-  void generateGraph();
+  void GenerateGraph();
 
   std::vector<int> GetTwoRandVertex();
  private:
