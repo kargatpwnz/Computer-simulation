@@ -1,18 +1,14 @@
 cmake_minimum_required(VERSION 3.9)
-project(modeling)
+project(Computer-simulation)
 
 set(CMAKE_CXX_STANDARD 11)
+set(SIMULATION_INCLUDE_DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-set(SOURCES
-        ${CMAKE_SOURCE_DIR}/src/Tree.cpp
-        ${CMAKE_SOURCE_DIR}/src/Graph.cpp
-        ${CMAKE_SOURCE_DIR}/src/Selection.cpp
-        ${CMAKE_SOURCE_DIR}/src/Chain.cpp)
+add_subdirectory(src)
+include_directories(${SIMULATION_INCLUDE_DIR})
 
-set(HEADERS
-        ${CMAKE_SOURCE_DIR}/src/headers/Tree.h
-        ${CMAKE_SOURCE_DIR}/src/headers/Graph.h
-        ${CMAKE_SOURCE_DIR}/src/headers/Selection.h
-        ${CMAKE_SOURCE_DIR}/src/headers/Chain.h)
+add_executable(simulation main.cpp)
 
-add_executable(simulation main.cpp ${SOURCES} ${HEADERS})
+target_link_libraries(simulation src)
+ADD_DEPENDENCIES(simulation src)

@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
-#include "headers/Graph.h"
+#include "graph.h"
 
 Graph::Graph(int vertex_count, int edges, int degree) : Tree(vertex_count, degree) {
   if ((vertex_count * (vertex_count - 1) / 2) < edges)

@@ -2,7 +2,7 @@
 // Created by na1l on 22.02.18.
 //
 
-#include "headers/Tree.h"
+#include "tree.h"
 #include <algorithm>
 #include <random>
 #include <iostream>

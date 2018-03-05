@@ -5,7 +5,7 @@
 #ifndef MODELING_GRAPH_H
 #define MODELING_GRAPH_H
 
-#include "Tree.h"
+#include "tree.h"
 
 class Graph : public Tree {
  public:

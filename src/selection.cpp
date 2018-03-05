@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <random>
-#include "headers/Selection.h"
+#include "selection.h"
 
 Selection::Selection() {
   FillVectors();
