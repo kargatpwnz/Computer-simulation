@@ -14,7 +14,7 @@ enum Time {
   TIME_EXPONENT
 };
 
-enum enum_Event {
+enum Event_type {
   EVENT_ENQUEUE,
   EVENT_DEQUEUE
 };
