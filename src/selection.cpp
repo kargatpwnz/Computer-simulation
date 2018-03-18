@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <random>
+
 #include "selection.h"
 
 Selection::Selection() {

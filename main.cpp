@@ -1,18 +1,15 @@
 #include <iostream>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/io.hpp>
+#include <queue>
 
-#include "src/headers/Tree.h"
-#include "src/headers/Graph.h"
-#include "src/headers/Chain.h"
-
-using namespace boost::numeric::ublas;
+#include "queueing_system.h"
+#include <random>
 
 int main() {
-  Chain chain;
-  chain.MultiplyMatrices();
-  chain.GenerateTransitions();
-  chain.PrintTransitionMatrices();
-
+  QueueingSystem model(2.0, TIME_UNIFORM, TIME_CONST);
+  model.PrintEventList();
+  model.Start();
+  std::cout << "----------------------------" << std::endl;
+  model.PrintStartList();
+  std::cout << model.CalculateAvgQueueingTime() << std::endl;
   return 0;
 }

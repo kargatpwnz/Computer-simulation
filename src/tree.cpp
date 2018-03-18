@@ -2,10 +2,11 @@
 // Created by na1l on 22.02.18.
 //
 
-#include "tree.h"
 #include <algorithm>
 #include <random>
 #include <iostream>
+
+#include "tree.h"
 
 Tree::Tree(int vertexCount, int degree) {
   max_degree_ = degree;

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
+
 #include "graph.h"
 
 Graph::Graph(int vertex_count, int edges, int degree) : Tree(vertex_count, degree) {

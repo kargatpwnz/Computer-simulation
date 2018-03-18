@@ -10,16 +10,16 @@
 
 enum Time {
   TIME_CONST,
-  TIME_EQUAL,
+  TIME_UNIFORM,
   TIME_EXPONENT
 };
 
-enum Event_type {
+enum EventType {
   EVENT_ENQUEUE,
   EVENT_DEQUEUE
 };
 
-struct client {
+struct Client {
   double time_in;
   double time_out;
   double queueing_time;
@@ -27,40 +27,35 @@ struct client {
   int id;
 };
 
-struct event {
+struct Event {
   double time;
   int client_id;
 
-  int type;
+  enum EventType type;
 
-  friend bool operator<(const event &e1, const event &e2) {
+  friend bool operator<(const Event &e1, const Event &e2) {
     return e1.time < e2.time;
   }
-
-  friend bool operator==(const event &e1, const event &e2) {
-    return e1.time == e2.time &&
-        e1.client_id == e2.client_id &&
-        e1.type == e2.type;
-  }
-
 };
 
 class QueueingSystem {
  public:
-  QueueingSystem();
+  QueueingSystem(double mean, enum Time type_in, enum Time type_out);
   void PrintEventList();
   void Start();
   void PrintStartList();
+  double CalculateAvgQueueingTime();
 
  private:
-  void FillClients();
+  void FillClients(double mean, enum Time type_in, enum Time type_out);
   void FillEvents();
+  void GenerateTime(int type_in, int type_out);
 
-  struct client clients_[3];
-
-  std::set<struct event> event_list_;
-  std::set<struct event> event_start_;
+  struct Client clients_[10];
+  std::multiset<struct Event> enqueued_list_;
+  std::multiset<struct Event> processing_events_;
   std::queue<int> queue_;
+  double mean_;
 
 };
 

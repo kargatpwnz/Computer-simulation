@@ -2,14 +2,13 @@
 // Created by na1l on 26.02.18.
 //
 
-#include "chain.h"
-
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/matrix_expression.hpp>
 
 #include <iostream>
 #include <random>
+
+#include "chain.h"
 
 Chain::Chain() {
   transition_matrix_.resize(5, 5);
@@ -110,9 +109,10 @@ void Chain::GenerateTransitions() {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<> double_distr(0, 1);
+  std::uniform_int_distribution<> int_dist(0, probability_sum_matrix_.size1());
 
   // First matrix
-  int line = 3;
+  int line = int_dist(gen);
   for (int i = 0; i < 10000; ++i) {
     double ksi = double_distr(gen);
 
@@ -126,7 +126,7 @@ void Chain::GenerateTransitions() {
   }
 
   // Second matrix
-  line = 3;
+  line = int_dist(gen);
   for (int i = 0; i < 10000; ++i) {
     double ksi = double_distr(gen);
 
