@@ -47,7 +47,6 @@ void QueueingSystem::Start() {
 
       // If Event is last one then add to list and exit
       if (event.client_id == processing_events_.rbegin()->client_id) {
-
         clients_[running].time_in = event.time;
         new_event.time = event.time + clients_[running].time_out;
         new_event.client_id = running;
@@ -58,7 +57,6 @@ void QueueingSystem::Start() {
       }
 
       // Filling DEQUEUE Event, going to next Event
-      clients_[running].time_in = event.time;
       new_event.time = event.time + clients_[running].time_out;
       new_event.client_id = running;
       new_event.type = EVENT_DEQUEUE;
@@ -103,7 +101,7 @@ double QueueingSystem::CalculateAvgQueueingTime() {
 
   for (auto client : clients_)
     result += client.queueing_time;
-  return result / 10000;
+  return result / size_;
 }
 
 void QueueingSystem::FillClients(double mean, enum Time type_in, enum Time type_out) {
@@ -117,29 +115,37 @@ void QueueingSystem::FillClients(double mean, enum Time type_in, enum Time type_
   switch (type_in) {
     case TIME_CONST:
       switch (type_out) {
-        case TIME_UNIFORM:GenerateTime(TIME_CONST, TIME_UNIFORM);
+        case TIME_UNIFORM:
+          GenerateTime(TIME_CONST, TIME_UNIFORM);
           break;
-        case TIME_EXPONENT:GenerateTime(TIME_CONST, TIME_EXPONENT);
+        case TIME_EXPONENT:
+          GenerateTime(TIME_CONST, TIME_EXPONENT);
           break;
       }
       break;
     case TIME_UNIFORM:
       switch (type_out) {
-        case TIME_CONST:GenerateTime(TIME_UNIFORM, TIME_CONST);
+        case TIME_CONST:
+          GenerateTime(TIME_UNIFORM, TIME_CONST);
           break;
-        case TIME_UNIFORM:GenerateTime(TIME_UNIFORM, TIME_UNIFORM);
+        case TIME_UNIFORM:
+          GenerateTime(TIME_UNIFORM, TIME_UNIFORM);
           break;
-        case TIME_EXPONENT:GenerateTime(TIME_UNIFORM, TIME_EXPONENT);
+        case TIME_EXPONENT:
+          GenerateTime(TIME_UNIFORM, TIME_EXPONENT);
           break;
       }
       break;
     case TIME_EXPONENT:
       switch (type_out) {
-        case TIME_CONST:GenerateTime(TIME_EXPONENT, TIME_CONST);
+        case TIME_CONST:
+          GenerateTime(TIME_EXPONENT, TIME_CONST);
           break;
-        case TIME_UNIFORM:GenerateTime(TIME_EXPONENT, TIME_UNIFORM);
+        case TIME_UNIFORM:
+          GenerateTime(TIME_EXPONENT, TIME_UNIFORM);
           break;
-        case TIME_EXPONENT:GenerateTime(TIME_EXPONENT, TIME_EXPONENT);
+        case TIME_EXPONENT:
+          GenerateTime(TIME_EXPONENT, TIME_EXPONENT);
           break;
       }
   }
@@ -163,38 +169,50 @@ void QueueingSystem::FillEvents() {
     }
   }
 }
-void QueueingSystem::GenerateTime(int type_in, int type_out) {
+
+void QueueingSystem::GenerateTime(enum Time type_in, enum Time type_out) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<> int_distr(1, 4);
-  std::uniform_real_distribution<double> double_distr(1, 4);
+  std::uniform_real_distribution<double> double_distr(0, mean_);
   std::uniform_real_distribution<double> exp_distr(0, 1);
 
-  double lambda = 1 / mean_;
+  const double min_value = double_distr(gen);
   int id = 0;
 
   for (auto &client : clients_) {
     switch (type_in) {
-      case TIME_CONST:client.time_in = mean_;
+      case TIME_CONST:
+        client.time_in = min_value;
         break;
-      case TIME_UNIFORM:client.time_in = double_distr(gen);
+      case TIME_UNIFORM:
+        client.time_in = double_distr(gen);
         break;
-      case TIME_EXPONENT:client.time_in = -1 / lambda * log(exp_distr(gen));
+      case TIME_EXPONENT:
+        client.time_in = -1 * mean_ * log(exp_distr(gen));
         break;
     }
 
     switch (type_out) {
-      case TIME_CONST:client.time_out = mean_;
+      case TIME_CONST:
+        client.time_out = mean_ * 0.9;
         break;
       case TIME_UNIFORM:
-        double_distr = std::uniform_real_distribution<>(client.time_in,
-                                                        mean_ / 0.9 * 2 - client.time_in);
+        double_distr = std::uniform_real_distribution<double>(client.time_in,
+                                                              mean_ * 0.9 * 2 - client.time_in);
+
         client.time_out = double_distr(gen);
+        std::cout << client.time_in << " " << client.time_out << std::endl;
         break;
-      case TIME_EXPONENT:client.time_out = -1 * lambda * log(exp_distr(gen));
+      case TIME_EXPONENT:
+        client.time_out = -1 * mean_ * 0.9 * log(exp_distr(gen));
+//        std::cout << client.time_in << " " << client.time_out << std::endl;
         break;
     }
     client.id = id++;
     client.queueing_time = 0;
   }
+}
+
+QueueingSystem::~QueueingSystem() {
+
 }

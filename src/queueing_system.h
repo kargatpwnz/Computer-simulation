@@ -45,13 +45,15 @@ class QueueingSystem {
   void Start();
   void PrintStartList();
   double CalculateAvgQueueingTime();
+  virtual ~QueueingSystem();
 
  private:
   void FillClients(double mean, enum Time type_in, enum Time type_out);
   void FillEvents();
-  void GenerateTime(int type_in, int type_out);
-
-  struct Client clients_[10];
+  void GenerateTime(enum Time type_in, enum Time type_out);
+  
+  static const int size_ = 10000;
+  struct Client clients_[size_];
   std::multiset<struct Event> enqueued_list_;
   std::multiset<struct Event> processing_events_;
   std::queue<int> queue_;
