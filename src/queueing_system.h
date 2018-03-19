@@ -51,7 +51,7 @@ class QueueingSystem {
   void FillClients(double mean, enum Time type_in, enum Time type_out);
   void FillEvents();
   void GenerateTime(enum Time type_in, enum Time type_out);
-  
+
   static const int size_ = 10000;
   struct Client clients_[size_];
   std::multiset<struct Event> enqueued_list_;

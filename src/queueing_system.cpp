@@ -90,9 +90,8 @@ void QueueingSystem::PrintStartList() {
 
   std::cout << std::endl;
   for (auto client : clients_) {
-    std::cout << "ID " << client.id << std::endl;
-    std::cout << "Waiting time " << client.queueing_time << std::endl;
-    std::cout << "--------------" << std::endl;
+    std::cout << "ID " << client.id;
+    std::cout << "\tWaiting time " << client.queueing_time << std::endl;
   }
 }
 
@@ -173,41 +172,45 @@ void QueueingSystem::FillEvents() {
 void QueueingSystem::GenerateTime(enum Time type_in, enum Time type_out) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<double> double_distr(0, mean_);
-  std::uniform_real_distribution<double> exp_distr(0, 1);
+  std::uniform_real_distribution<double> double_distr(0, 1);
+  std::uniform_real_distribution<double> time_in_distr(0, 1);
+  std::uniform_real_distribution<double> time_out_distr(0, 1);
 
-  const double min_value = double_distr(gen);
   int id = 0;
+  double min;
+
+  // Configuring generators
+  switch (type_in) {
+    case TIME_CONST:
+      time_in_distr = std::uniform_real_distribution<>(mean_, mean_);
+      break;
+    case TIME_UNIFORM:
+      min = double_distr(gen);
+      time_in_distr = std::uniform_real_distribution<>(min, mean_ * 2 - min);
+      break;
+  }
+
+  switch (type_out) {
+    case TIME_CONST:
+      time_out_distr = std::uniform_real_distribution<>(mean_ * 0.9, mean_ * 0.9);
+      break;
+    case TIME_UNIFORM:
+      min = double_distr(gen);
+      time_out_distr = std::uniform_real_distribution<>(min, mean_ * 0.9 * 2 - min);
+      break;
+  }
 
   for (auto &client : clients_) {
-    switch (type_in) {
-      case TIME_CONST:
-        client.time_in = min_value;
-        break;
-      case TIME_UNIFORM:
-        client.time_in = double_distr(gen);
-        break;
-      case TIME_EXPONENT:
-        client.time_in = -1 * mean_ * log(exp_distr(gen));
-        break;
-    }
+    if (type_in == TIME_EXPONENT)
+      client.time_in = -1 * mean_ * log(double_distr(gen));
+    else
+      client.time_in = time_in_distr(gen);
 
-    switch (type_out) {
-      case TIME_CONST:
-        client.time_out = mean_ * 0.9;
-        break;
-      case TIME_UNIFORM:
-        double_distr = std::uniform_real_distribution<double>(client.time_in,
-                                                              mean_ * 0.9 * 2 - client.time_in);
+    if (type_out == TIME_EXPONENT)
+      client.time_out = -1 * mean_ * 0.9 * log(double_distr(gen));
+    else
+      client.time_out = time_out_distr(gen);
 
-        client.time_out = double_distr(gen);
-        std::cout << client.time_in << " " << client.time_out << std::endl;
-        break;
-      case TIME_EXPONENT:
-        client.time_out = -1 * mean_ * 0.9 * log(exp_distr(gen));
-//        std::cout << client.time_in << " " << client.time_out << std::endl;
-        break;
-    }
     client.id = id++;
     client.queueing_time = 0;
   }
